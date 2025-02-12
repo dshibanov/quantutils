@@ -2,10 +2,8 @@ import sys
 sys.path.append('./')
 
 from quantutils.parameters import *
-import env.env_config as fd
 # from api.search import get_agent
 import datamart.datamart as dm
-from api.search import get_search_space
 
 
 def test_set_value_to():
@@ -285,12 +283,3 @@ def test_split():
         set_value_to(pipk, keys, p['value'])
 
 
-def get_distribution(config):
-    # func_name = config.get('distribution', 'uniform')
-    func_name = config.get('distribution', 'randint')
-    module_path = 'ray.tune'
-    module = ilib.import_module(module_path)
-    f_name = getattr(module, func_name)
-    keys_to_remove = {'name', 'distribution', 'optimize', 'value'}
-    params = {k: v for k, v in config.items() if k not in keys_to_remove}
-    return f_name(**params)

@@ -6,31 +6,18 @@ import dictdiffer
 from pprint import pprint
 import copy
 import inspect
+import importlib as ilib
 
 
-def get_distribution(config):
-    # func_name = config.get('distribution', 'uniform')
-    func_name = config.get('distribution', 'randint')
-    module_path = 'ray.tune'
-    module = ilib.import_module(module_path)
-    f_name = getattr(module, func_name)
-    keys_to_remove = {'name', 'distribution', 'optimize', 'value'}
-    params = {k: v for k, v in config.items() if k not in keys_to_remove}
-    return f_name(**params)
+
+
 def get_search_space(params):
     search_space = {}
     for p in params:
         if p.get('optimize', False) == True:
             search_space[p['name']] = get_distribution(p)
     return search_space
-def get_agent(config):
-    agent_name = config["name"]
-    agent_params = config["params"]
-    class_name = agent_name.rpartition('.')[-1]
-    module_path, class_name = agent_name.rsplit('.', 1)
-    module = ilib.import_module(module_path)
-    class_name = getattr(module, class_name)
-    return class_name(agent_params)
+
 
 def set_value_to(config, keys, value):
     d = config
