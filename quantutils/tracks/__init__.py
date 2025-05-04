@@ -5,6 +5,8 @@ from pprint import pprint
 import pandas as pd
 
 def load_tracks(folder):
+
+    print(folder)
     pattern = re.compile(r"(.+?)_(.+?)_(.+?)_(.+?)\.pkl")
     tracks = []
 
@@ -22,14 +24,19 @@ def load_tracks(folder):
                     df['order_book']['bid_normalized'] = (df['order_book']['bid'] - df['order_book']['bid'].min()) / (df['order_book']['bid'].max() - df['order_book']['bid'].min())
                     df['pnl']['pnl_normalized'] = (df['pnl']['pnl'] - df['pnl']['pnl'].min()) / (df['pnl']['pnl'].max() - df['pnl']['pnl'].min())
                     df['merged'] = pd.merge(df['order_book'], df['pnl'], how='outer')
-                    tracks.append(df)
+
+                    d = {'df': df, 'symbol': symbol, 'direction': direction, 'amount': amount, 'leverage': leverage}
+                    # tracks.append(df)
+                    tracks.append(d)
     return tracks
 
 
 
 def test_load_tracks():
-    tracks = load_tracks('../../../datamart/tracks/')
+    # tracks = load_tracks('../../../datamart/tracks/')
+    tracks = load_tracks('../datamart/tracks/')
     print(len(tracks))
+    pprint(tracks[0])
 
 
 if __name__ == "__main__":
